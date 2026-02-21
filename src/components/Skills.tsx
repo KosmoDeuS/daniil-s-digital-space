@@ -1,11 +1,11 @@
 import { useReveal } from "@/hooks/useReveal";
 
 const skills = [
-  { label: "Стрессоустойчивый", emoji: "🧘" },
-  { label: "Кризис менеджер", emoji: "🔥" },
-  { label: "Фантазёр", emoji: "💭" },
-  { label: "Любитель ИИ", emoji: "🤖" },
-  { label: "Плохо знаю 3 языка", emoji: "🗣️" },
+  { label: "Stress-Resistant", emoji: "🧘" },
+  { label: "Crisis Manager", emoji: "🔥" },
+  { label: "Daydreamer", emoji: "💭" },
+  { label: "AI Enthusiast", emoji: "🤖" },
+  { label: "Barely Know 3 Languages", emoji: "🗣️" },
 ];
 
 const Skills = () => {
@@ -20,7 +20,7 @@ const Skills = () => {
           {skills.map((skill) => (
             <div
               key={skill.label}
-              className="group p-5 rounded-xl bg-card border border-border hover:border-primary/50 hover:glow-amber transition-all duration-300 text-center"
+              className="group p-5 rounded-xl bg-card border border-border hover:border-primary/50 hover:glow-accent transition-all duration-300 text-center"
             >
               <span className="text-3xl block mb-3 group-hover:scale-110 transition-transform">
                 {skill.emoji}
