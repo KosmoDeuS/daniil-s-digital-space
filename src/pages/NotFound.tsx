@@ -1,3 +1,13 @@
+/**
+ * EN: 404 Not Found page — shown when the user navigates to a non-existent route.
+ *     Logs the invalid path to the console for debugging.
+ * RU: Страница 404 — отображается при переходе на несуществующий маршрут.
+ *     Логирует некорректный путь в консоль для отладки.
+ *
+ * EN: Interacts with: src/App.tsx (registered as the catch-all "*" route)
+ * RU: Взаимодействует с: src/App.tsx (зарегистрирована как маршрут-ловушка "*")
+ */
+
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 

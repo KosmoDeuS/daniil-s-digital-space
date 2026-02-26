@@ -1,6 +1,21 @@
+/**
+ * EN: About section — displays a short bio and key facts (location, education, interests).
+ *     Uses the useReveal hook for scroll-triggered fade-in animation.
+ * RU: Секция «Обо мне» — отображает краткую биографию и ключевые факты (местоположение, образование, интересы).
+ *     Использует хук useReveal для анимации появления при прокрутке.
+ *
+ * EN: Interacts with:
+ *   - src/pages/Index.tsx — rendered inside the home page
+ *   - src/hooks/useReveal.ts — provides the IntersectionObserver-based reveal animation
+ * RU: Взаимодействует с:
+ *   - src/pages/Index.tsx — отрисовывается внутри главной страницы
+ *   - src/hooks/useReveal.ts — предоставляет анимацию появления на основе IntersectionObserver
+ */
+
 import { useReveal } from "@/hooks/useReveal";
 import { MapPin, GraduationCap, Sparkles } from "lucide-react";
 
+/** EN: Quick facts displayed as cards / RU: Быстрые факты, отображаемые карточками */
 const facts = [
   { icon: MapPin, text: "Based in Aberdeen, Scotland" },
   { icon: GraduationCap, text: "HND Computing Science student" },
@@ -20,6 +35,8 @@ const About = () => {
           (and occasionally fixing them), and dreaming up ambitious projects. When I'm not coding, 
           I'm probably overthinking something creative or surviving another Scottish winter.
         </p>
+
+        {/* EN: Fact cards grid / RU: Сетка карточек с фактами */}
         <div className="grid sm:grid-cols-3 gap-4">
           {facts.map((fact) => (
             <div

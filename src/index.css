@@ -1,39 +1,71 @@
+/**
+ * EN: Global styles and design tokens — defines the entire color scheme, custom utilities,
+ *     and Tailwind base/component/utility layers. All colors use HSL format for consistency.
+ *     This is a dark-only theme with a dark blue palette and light blue accents.
+ * RU: Глобальные стили и дизайн-токены — определяет всю цветовую схему, кастомные утилиты
+ *     и слои Tailwind base/components/utilities. Все цвета в формате HSL для единообразия.
+ *     Это тёмная тема с тёмно-синей палитрой и светло-голубыми акцентами.
+ *
+ * EN: Used by: every component via Tailwind classes (bg-background, text-primary, etc.)
+ * RU: Используется: всеми компонентами через классы Tailwind (bg-background, text-primary и т.д.)
+ *
+ * EN: Key custom utilities defined here:
+ *   .font-mono-display — JetBrains Mono monospace font
+ *   .text-gradient — gradient text effect (light blue)
+ *   .glow-accent — glowing box-shadow effect
+ *   .marble-bg — multi-layer radial gradient background texture
+ * RU: Ключевые кастомные утилиты:
+ *   .font-mono-display — моноширинный шрифт JetBrains Mono
+ *   .text-gradient — эффект градиентного текста (светло-голубой)
+ *   .glow-accent — эффект свечения (box-shadow)
+ *   .marble-bg — многослойный радиальный градиентный фон
+ */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
+    /* EN: Main background — very dark blue / RU: Основной фон — очень тёмный синий */
     --background: 222 47% 6%;
+    /* EN: Main text color — light gray-blue / RU: Основной цвет текста — светлый серо-голубой */
     --foreground: 210 20% 90%;
 
+    /* EN: Card backgrounds — slightly lighter than background / RU: Фон карточек — чуть светлее основного */
     --card: 222 40% 10%;
     --card-foreground: 210 20% 90%;
 
     --popover: 222 40% 10%;
     --popover-foreground: 210 20% 90%;
 
+    /* EN: Primary accent — light cyan/teal / RU: Основной акцент — светлый голубой/бирюзовый */
     --primary: 190 60% 70%;
     --primary-foreground: 222 47% 6%;
 
+    /* EN: Secondary — darker blue for buttons/backgrounds / RU: Вторичный — тёмно-синий для кнопок/фонов */
     --secondary: 222 35% 14%;
     --secondary-foreground: 210 20% 80%;
 
+    /* EN: Muted — for subtle text and backgrounds / RU: Приглушённый — для неяркого текста и фонов */
     --muted: 222 35% 14%;
     --muted-foreground: 220 15% 50%;
 
     --accent: 190 60% 70%;
     --accent-foreground: 222 47% 6%;
 
+    /* EN: Destructive — red for errors and delete actions / RU: Деструктивный — красный для ошибок и удаления */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
+    /* EN: Borders and inputs / RU: Границы и поля ввода */
     --border: 222 30% 16%;
     --input: 222 30% 16%;
     --ring: 190 60% 70%;
 
     --radius: 0.75rem;
 
+    /* EN: Sidebar-specific tokens / RU: Токены для боковой панели */
     --sidebar-background: 222 47% 6%;
     --sidebar-foreground: 210 20% 90%;
     --sidebar-primary: 190 60% 70%;
@@ -55,25 +87,35 @@
     font-family: 'Inter', sans-serif;
   }
 
+  /* EN: Smooth scrolling for anchor links / RU: Плавная прокрутка для якорных ссылок */
   html {
     scroll-behavior: smooth;
   }
 }
 
 @layer utilities {
+  /* EN: Monospace display font (JetBrains Mono) / RU: Моноширинный шрифт для заголовков */
   .font-mono-display {
     font-family: 'JetBrains Mono', monospace;
   }
 
+  /* EN: Gradient text — clips background gradient to text / RU: Градиентный текст — обрезает фоновый градиент по тексту */
   .text-gradient {
     @apply bg-clip-text text-transparent;
     background-image: linear-gradient(135deg, hsl(190 60% 70%), hsl(220 60% 75%));
   }
 
+  /* EN: Glow effect — blue shadow on hover / RU: Эффект свечения — голубая тень при наведении */
   .glow-accent {
     box-shadow: 0 0 40px -10px hsl(190 60% 70% / 0.3);
   }
 
+  /**
+   * EN: Marble background — multi-layer radial gradients creating a textured dark blue surface.
+   *     Applied to page containers (Index, TaskManagerPage).
+   * RU: Мраморный фон — многослойные радиальные градиенты, создающие текстурированную тёмно-синюю поверхность.
+   *     Применяется к контейнерам страниц (Index, TaskManagerPage).
+   */
   .marble-bg {
     background-image: 
       radial-gradient(ellipse at 20% 50%, hsl(222 47% 12%) 0%, transparent 50%),
