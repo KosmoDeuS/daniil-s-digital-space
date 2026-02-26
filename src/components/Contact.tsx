@@ -1,3 +1,17 @@
+/**
+ * EN: Contact section — provides email CTA button and social media links (Instagram, Telegram).
+ *     Uses the useReveal hook for scroll-triggered animation.
+ * RU: Секция контактов — содержит кнопку отправки email и ссылки на соцсети (Instagram, Telegram).
+ *     Использует хук useReveal для анимации при прокрутке.
+ *
+ * EN: Interacts with:
+ *   - src/pages/Index.tsx — rendered inside the home page
+ *   - src/hooks/useReveal.ts — scroll reveal animation
+ * RU: Взаимодействует с:
+ *   - src/pages/Index.tsx — отрисовывается внутри главной страницы
+ *   - src/hooks/useReveal.ts — анимация появления при прокрутке
+ */
+
 import { useReveal } from "@/hooks/useReveal";
 import { Mail, Send } from "lucide-react";
 
@@ -13,6 +27,7 @@ const Contact = () => {
           Got an idea, a question, or just want to say hi? I'm always up for a chat.
         </p>
 
+        {/* EN: Email CTA button / RU: Кнопка отправки email */}
         <a
           href="mailto:dantist099@gmail.com"
           className="inline-flex items-center gap-2 px-8 py-4 rounded-lg bg-primary text-primary-foreground font-medium text-lg hover:opacity-90 transition-opacity mb-8"
@@ -21,6 +36,7 @@ const Contact = () => {
           Say Hello
         </a>
 
+        {/* EN: Social media links / RU: Ссылки на соцсети */}
         <div className="flex items-center justify-center gap-6 mt-2">
           <a
             href="https://instagram.com/_daniil_rusnak_"
