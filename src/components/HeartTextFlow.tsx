@@ -48,14 +48,25 @@ const HeartTextFlow = () => {
     const svg = svgRef.current;
     if (!svg) return;
 
+    // Get actual path lengths for pixel-based offsets
+    const pathEls = svg.querySelectorAll<SVGPathElement>("defs path[id^='hl']");
+    const pathLengths: number[] = [];
+    pathEls.forEach((p) => pathLengths.push(p.getTotalLength()));
+
     const textPaths = svg.querySelectorAll<SVGTextPathElement>("[data-lane]");
+    const SPEED = 0.8; // pixels per frame
 
     const animate = () => {
-      progressRef.current = (progressRef.current + 0.04) % 100;
+      progressRef.current += SPEED;
       textPaths.forEach((tp) => {
+        const lane = Number(tp.dataset.lane || 0);
         const copy = Number(tp.dataset.copy || 0);
-        const offset = (progressRef.current + copy * 50) % 100;
-        tp.setAttribute("startOffset", `${offset}%`);
+        const len = pathLengths[lane] || 1;
+        // Wrap progress within path length
+        const base = progressRef.current % len;
+        // Offset each copy by half the path length
+        const offset = (base + copy * (len / 2)) % len;
+        tp.setAttribute("startOffset", `${offset}px`);
       });
       rafRef.current = requestAnimationFrame(animate);
     };
