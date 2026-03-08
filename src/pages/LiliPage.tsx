@@ -57,13 +57,40 @@ const LiliPage = () => {
 
       {/* Footer */}
       <footer
-        className={`relative z-10 text-center py-4 transition-all duration-1000 delay-500 ease-out ${
+        className={`relative z-10 py-8 px-6 transition-all duration-1000 delay-500 ease-out ${
           visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
         }`}
       >
-        <p className="text-pink-400/30 text-xs tracking-[0.25em] uppercase font-light">
-          Made with love
-        </p>
+        <div className="max-w-md mx-auto text-center space-y-4">
+          {/* Decorative divider */}
+          <div className="flex items-center justify-center gap-3">
+            <div className="h-px w-12 bg-gradient-to-r from-transparent to-pink-500/30" />
+            <Heart size={12} className="text-pink-500/40" fill="currentColor" />
+            <div className="h-px w-12 bg-gradient-to-l from-transparent to-pink-500/30" />
+          </div>
+
+          {/* Love quote */}
+          <p className="text-pink-300/50 text-sm italic font-light leading-relaxed">
+            «Ты — моё всё»
+          </p>
+
+          {/* Hearts row */}
+          <div className="flex items-center justify-center gap-1.5">
+            {[10, 8, 6, 8, 10].map((size, i) => (
+              <Heart
+                key={i}
+                size={size}
+                className="text-pink-500/25"
+                fill="currentColor"
+                style={{ animationDelay: `${i * 0.2}s` }}
+              />
+            ))}
+          </div>
+
+          <p className="text-pink-400/20 text-[10px] tracking-[0.3em] uppercase font-light">
+            Made with love · Forever yours
+          </p>
+        </div>
       </footer>
     </div>
   );
