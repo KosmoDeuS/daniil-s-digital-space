@@ -44,13 +44,13 @@ const SPEED_PX_PER_SEC = 45;
 
 /* Colour gradient from outer (deep magenta) to inner (bright hot pink / white-ish) for depth */
 const LANE_COLORS = [
-  "hsl(350 100% 70%)",
-  "hsl(350 100% 70%)",
-  "hsl(350 100% 70%)",
-  "hsl(350 100% 70%)",
-  "hsl(350 100% 70%)",
-  "hsl(350 100% 70%)",
-  "hsl(350 100% 70%)",
+  "hsl(328 100% 54%)",
+  "hsl(328 100% 54%)",
+  "hsl(328 100% 54%)",
+  "hsl(328 100% 54%)",
+  "hsl(328 100% 54%)",
+  "hsl(328 100% 54%)",
+  "hsl(328 100% 54%)",
 ];
 const LANE_OPACITIES = [1.0, 0.82, 0.65, 0.50, 0.37, 0.25, 0.15];
 
