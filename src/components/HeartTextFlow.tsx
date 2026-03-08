@@ -180,14 +180,15 @@ const HeartTextFlow = () => {
           Lili
         </text>
         <text
-          x={CX + 58}
-          y={CY + 12}
+          x={CX + 80}
+          y={CY + 10}
           textAnchor="middle"
           dominantBaseline="middle"
-          fill="hsl(330 100% 71%)"
-          fontSize="24"
-          className="animate-pulse"
+          fill="hsl(340 80% 55%)"
+          fontSize="48"
         >
+          <animate attributeName="font-size" values="48;60;48" dur="0.8s" repeatCount="indefinite" keyTimes="0;0.3;1" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1" />
+          <animate attributeName="opacity" values="0.85;1;0.85" dur="0.8s" repeatCount="indefinite" />
           ♥
         </text>
       </g>
