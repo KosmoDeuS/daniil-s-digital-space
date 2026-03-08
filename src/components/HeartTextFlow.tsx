@@ -149,7 +149,7 @@ const HeartTextFlow = () => {
               key={token}
               fill={LANE_COLORS[lane]}
               stroke="black"
-              strokeWidth="1"
+              strokeWidth="3"
               paintOrder="stroke"
               fontSize={FONT_SIZES[lane]}
               fontFamily="'Inter', sans-serif"
