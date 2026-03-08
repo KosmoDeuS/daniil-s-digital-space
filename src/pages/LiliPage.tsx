@@ -18,7 +18,7 @@ const LiliPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: 'radial-gradient(ellipse at center, hsl(0 60% 18%), hsl(0 50% 10%))' }}>
+    <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: 'radial-gradient(ellipse at center, hsl(0 0% 2%), hsl(350 65% 15%), hsl(345 60% 20%))' }}>
       <PinkParticles />
 
       {/* Header */}
