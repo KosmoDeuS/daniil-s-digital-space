@@ -5,7 +5,8 @@
 
 import { useEffect, useMemo, useRef } from "react";
 
-const TOKEN_TEXT = " I love you ";
+/* Individual characters as tokens; spaces only between words */
+const CHAR_SEQUENCE = ["I", " ", "l", "o", "v", "e", " ", "y", "o", "u"];
 
 /**
  * Generate a closed heart-shaped SVG path.
