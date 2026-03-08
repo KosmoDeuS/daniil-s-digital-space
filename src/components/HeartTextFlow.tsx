@@ -44,15 +44,15 @@ const SPEED_PX_PER_SEC = 62;
 
 /* Colour gradient from outer (deep magenta) to inner (bright hot pink / white-ish) for depth */
 const LANE_COLORS = [
-  "hsl(330 100% 45%)",
-  "hsl(332 100% 52%)",
-  "hsl(334 100% 59%)",
-  "hsl(336 100% 66%)",
-  "hsl(338 100% 73%)",
-  "hsl(340 100% 80%)",
-  "hsl(342 100% 87%)",
+  "hsl(330 100% 60%)",
+  "hsl(330 100% 60%)",
+  "hsl(330 100% 60%)",
+  "hsl(330 100% 60%)",
+  "hsl(330 100% 60%)",
+  "hsl(330 100% 60%)",
+  "hsl(330 100% 60%)",
 ];
-const LANE_OPACITIES = [0.7, 0.75, 0.8, 0.85, 0.9, 0.93, 0.97];
+const LANE_OPACITIES = [1.0, 0.82, 0.65, 0.50, 0.37, 0.25, 0.15];
 
 const HeartTextFlow = () => {
   const svgRef = useRef<SVGSVGElement>(null);
