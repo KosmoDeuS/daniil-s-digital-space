@@ -171,7 +171,7 @@ const HeartTextFlow = () => {
           y={CY + 15}
           textAnchor="middle"
           dominantBaseline="middle"
-          fill="hsl(330 100% 76%)"
+          fill="hsl(340 70% 45%)"
           fontSize="46"
           fontFamily="'Inter', sans-serif"
           fontWeight="700"
