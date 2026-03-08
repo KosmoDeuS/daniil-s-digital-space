@@ -83,6 +83,11 @@ const HeartTextFlow = () => {
 
     const textPaths = svg.querySelectorAll<SVGTextPathElement>("textPath[data-lane][data-token]");
 
+    /* Pixel zone near the seam (offset ~0) where characters fade in one by one */
+    const REVEAL_ZONE_PX = 150;
+    const fullText = TOKEN_TEXT;
+    const charCount = fullText.length;
+
     const animate = (time: number) => {
       if (lastTimeRef.current === null) lastTimeRef.current = time;
       const deltaSec = (time - lastTimeRef.current) / 1000;
@@ -99,6 +104,31 @@ const HeartTextFlow = () => {
         const rawOffset = progressRef.current + token * metric.spacing;
         const offset = ((rawOffset % metric.length) + metric.length) % metric.length;
         tp.setAttribute("startOffset", `${offset}px`);
+
+        const parentText = tp.parentElement;
+        if (!parentText) return;
+        const baseFill = parentText.getAttribute("fill") || "hsl(330 100% 70%)";
+        const baseOpacity = Number(parentText.getAttribute("opacity") || 1);
+
+        if (offset < REVEAL_ZONE_PX) {
+          /* Fractional reveal progress — how many chars are fully/partially visible */
+          const revealProgress = (offset / REVEAL_ZONE_PX) * charCount;
+
+          /* Build per-character tspans with individual opacity */
+          let html = "";
+          for (let i = 0; i < charCount; i++) {
+            const charProgress = Math.max(0, Math.min(1, revealProgress - i));
+            const charOpacity = (charProgress * baseOpacity).toFixed(2);
+            const ch = fullText[i] === " " ? "&#160;" : fullText[i];
+            html += `<tspan opacity="${charOpacity}">${ch}</tspan>`;
+          }
+          tp.innerHTML = html;
+        } else {
+          /* Fully visible — just plain text, no tspans overhead */
+          if (tp.childElementCount > 0 || tp.textContent !== fullText) {
+            tp.textContent = fullText;
+          }
+        }
       });
 
       rafRef.current = requestAnimationFrame(animate);
