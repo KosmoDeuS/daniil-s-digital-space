@@ -5,7 +5,8 @@
 
 import { useEffect, useMemo, useRef } from "react";
 
-const TOKEN_TEXT = " I love you ";
+/* Individual characters as tokens; spaces only between words */
+const CHAR_SEQUENCE = ["I", " ", "l", "o", "v", "e", " ", "y", "o", "u"];
 
 /**
  * Generate a closed heart-shaped SVG path.
@@ -38,7 +39,7 @@ const CY = 440;
 const BASE_SCALE = 24;
 const LANE_SCALES = [1.0, 0.87, 0.74, 0.61, 0.48, 0.36, 0.25];
 const FONT_SIZES = [15, 14, 13, 11, 10, 9, 7];
-const TOKEN_COUNTS = [30, 27, 24, 20, 17, 14, 10];
+const CHAR_COUNTS = [120, 108, 96, 80, 68, 56, 40];
 const SPEED_PX_PER_SEC = 62;
 
 /* Colour gradient from outer (deep magenta) to inner (bright hot pink / white-ish) for depth */
@@ -65,7 +66,7 @@ const HeartTextFlow = () => {
   );
 
   const laneTokenIndexes = useMemo(
-    () => TOKEN_COUNTS.map((count) => Array.from({ length: count }, (_, i) => i)),
+    () => CHAR_COUNTS.map((count) => Array.from({ length: count }, (_, i) => i)),
     []
   );
 
@@ -76,7 +77,7 @@ const HeartTextFlow = () => {
     const pathEls = svg.querySelectorAll<SVGPathElement>("defs path[id^='hl']");
     const laneMetrics = Array.from(pathEls).map((pathEl, lane) => {
       const length = pathEl.getTotalLength();
-      const count = TOKEN_COUNTS[lane] ?? 12;
+      const count = CHAR_COUNTS[lane] ?? 40;
       const spacing = length / count;
       return { length, spacing };
     });
@@ -157,7 +158,7 @@ const HeartTextFlow = () => {
                 href={`#hl${lane}`}
                 startOffset="0px"
               >
-                {TOKEN_TEXT}
+                {CHAR_SEQUENCE[token % CHAR_SEQUENCE.length]}
               </textPath>
             </text>
           ))}
