@@ -44,13 +44,13 @@ const SPEED_PX_PER_SEC = 45;
 
 /* Colour gradient from outer (deep magenta) to inner (bright hot pink / white-ish) for depth */
 const LANE_COLORS = [
-  "hsl(328 100% 54%)",
-  "hsl(328 100% 54%)",
-  "hsl(328 100% 54%)",
-  "hsl(328 100% 54%)",
-  "hsl(328 100% 54%)",
-  "hsl(328 100% 54%)",
-  "hsl(328 100% 54%)",
+  "hsl(345 90% 50%)",
+  "hsl(345 90% 50%)",
+  "hsl(345 90% 50%)",
+  "hsl(345 90% 50%)",
+  "hsl(345 90% 50%)",
+  "hsl(345 90% 50%)",
+  "hsl(345 90% 50%)",
 ];
 const LANE_OPACITIES = [1.0, 0.82, 0.65, 0.50, 0.37, 0.25, 0.15];
 
@@ -174,7 +174,7 @@ const HeartTextFlow = () => {
           y={CY + 15}
           textAnchor="middle"
           dominantBaseline="middle"
-          fill="hsl(328 100% 54%)"
+          fill="hsl(345 90% 50%)"
           fontSize="72"
           fontFamily="'Inter', sans-serif"
           fontWeight="700"
@@ -187,7 +187,7 @@ const HeartTextFlow = () => {
           y={CY + 10}
           textAnchor="middle"
           dominantBaseline="middle"
-          fill="hsl(328 100% 54%)"
+          fill="hsl(345 90% 50%)"
           fontSize="48"
         >
           <animate attributeName="font-size" values="48;60;48" dur="0.8s" repeatCount="indefinite" keyTimes="0;0.3;1" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1" />
