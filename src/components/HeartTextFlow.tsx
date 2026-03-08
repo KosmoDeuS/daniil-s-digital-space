@@ -40,7 +40,7 @@ const BASE_SCALE = 24;
 const LANE_SCALES = [1.0, 0.87, 0.74, 0.61, 0.48, 0.36, 0.25];
 const FONT_SIZES = [28, 25, 22, 20, 17, 15, 12];
 const CHAR_COUNTS = [120, 108, 96, 80, 68, 56, 40];
-const SPEED_PX_PER_SEC = 38;
+const SPEED_PX_PER_SEC = 25;
 
 /* Colour gradient from outer (deep magenta) to inner (bright hot pink / white-ish) for depth */
 const LANE_COLORS = [
