@@ -18,7 +18,7 @@ interface Particle {
   wobbleAmp: number;
 }
 
-const PARTICLE_COUNT = 60;
+const PARTICLE_COUNT = 120;
 
 /** Random value within ±15% of base */
 const vary = (base: number) => base * (0.85 + Math.random() * 0.3);
