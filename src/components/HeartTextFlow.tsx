@@ -110,11 +110,11 @@ const HeartTextFlow = () => {
         const baseFill = parentText.getAttribute("fill") || "hsl(330 100% 70%)";
         const baseOpacity = Number(parentText.getAttribute("opacity") || 1);
 
-        if (offset < REVEAL_ZONE_PX) {
-          /* Fractional reveal progress — how many chars are fully/partially visible */
-          const revealProgress = (offset / REVEAL_ZONE_PX) * charCount;
+        const distToEnd = metric.length - offset;
 
-          /* Build per-character tspans with individual opacity */
+        if (offset < REVEAL_ZONE_PX) {
+          /* Fade IN — left side of seam, last char appears first */
+          const revealProgress = (offset / REVEAL_ZONE_PX) * charCount;
           let html = "";
           for (let i = 0; i < charCount; i++) {
             const reverseI = charCount - 1 - i;
@@ -124,8 +124,19 @@ const HeartTextFlow = () => {
             html += `<tspan opacity="${charOpacity}">${ch}</tspan>`;
           }
           tp.innerHTML = html;
+        } else if (distToEnd < REVEAL_ZONE_PX) {
+          /* Fade OUT — right side of seam, first char disappears first */
+          const fadeProgress = (distToEnd / REVEAL_ZONE_PX) * charCount;
+          let html = "";
+          for (let i = 0; i < charCount; i++) {
+            const charProgress = Math.max(0, Math.min(1, fadeProgress - i));
+            const charOpacity = (charProgress * baseOpacity).toFixed(2);
+            const ch = fullText[i] === " " ? "&#160;" : fullText[i];
+            html += `<tspan opacity="${charOpacity}">${ch}</tspan>`;
+          }
+          tp.innerHTML = html;
         } else {
-          /* Fully visible — just plain text, no tspans overhead */
+          /* Fully visible */
           if (tp.childElementCount > 0 || tp.textContent !== fullText) {
             tp.textContent = fullText;
           }
