@@ -64,8 +64,8 @@ const HeartTextFlow = () => {
         const len = pathLengths[lane] || 1;
         // Wrap progress within path length
         const base = progressRef.current % len;
-        // Offset each copy by half the path length
-        const offset = (base + copy * (len / 2)) % len;
+        // Offset each copy by a third of the path length
+        const offset = (base + copy * (len / 3)) % len;
         tp.setAttribute("startOffset", `${offset}px`);
       });
       rafRef.current = requestAnimationFrame(animate);
