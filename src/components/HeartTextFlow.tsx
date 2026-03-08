@@ -83,11 +83,6 @@ const HeartTextFlow = () => {
 
     const textPaths = svg.querySelectorAll<SVGTextPathElement>("textPath[data-lane][data-token]");
 
-    /* Pixel zones near the seam (offset ~0 and ~length) for fade in/out */
-    const FADE_ZONE_PX = 150;
-    const fullText = TOKEN_TEXT;
-    const charCount = fullText.length;
-
     const animate = (time: number) => {
       if (lastTimeRef.current === null) lastTimeRef.current = time;
       const deltaSec = (time - lastTimeRef.current) / 1000;
@@ -104,42 +99,6 @@ const HeartTextFlow = () => {
         const rawOffset = progressRef.current + token * metric.spacing;
         const offset = ((rawOffset % metric.length) + metric.length) % metric.length;
         tp.setAttribute("startOffset", `${offset}px`);
-
-        const parentText = tp.parentElement;
-        if (!parentText) return;
-        const baseOpacity = Number(parentText.getAttribute("opacity") || 1);
-
-        const distToEnd = metric.length - offset;
-        const inFadeIn = offset < FADE_ZONE_PX;
-        const inFadeOut = distToEnd < FADE_ZONE_PX;
-
-        if (inFadeIn || inFadeOut) {
-          let html = "";
-          for (let i = 0; i < charCount; i++) {
-            let charOp = baseOpacity;
-
-            if (inFadeIn) {
-              /* Fade-in: characters reveal progressively from the seam start */
-              const revealProgress = (offset / FADE_ZONE_PX) * charCount;
-              charOp = Math.max(0, Math.min(1, revealProgress - i)) * baseOpacity;
-            }
-
-            if (inFadeOut) {
-              /* Fade-out: characters disappear from the end, approaching the seam */
-              const fadeProgress = (distToEnd / FADE_ZONE_PX) * charCount;
-              const fadeOp = Math.max(0, Math.min(1, fadeProgress - (charCount - 1 - i))) * baseOpacity;
-              charOp = inFadeIn ? Math.min(charOp, fadeOp) : fadeOp;
-            }
-
-            const ch = fullText[i] === " " ? "&#160;" : fullText[i];
-            html += `<tspan opacity="${charOp.toFixed(2)}">${ch}</tspan>`;
-          }
-          tp.innerHTML = html;
-        } else {
-          if (tp.childElementCount > 0 || tp.textContent !== fullText) {
-            tp.textContent = fullText;
-          }
-        }
       });
 
       rafRef.current = requestAnimationFrame(animate);
