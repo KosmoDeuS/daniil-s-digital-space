@@ -174,7 +174,7 @@ const HeartTextFlow = () => {
           y={CY + 15}
           textAnchor="middle"
           dominantBaseline="middle"
-          fill="hsl(340 70% 45%)"
+          fill="hsl(328 100% 54%)"
           fontSize="72"
           fontFamily="'Inter', sans-serif"
           fontWeight="700"
@@ -187,7 +187,7 @@ const HeartTextFlow = () => {
           y={CY + 10}
           textAnchor="middle"
           dominantBaseline="middle"
-          fill="hsl(340 80% 55%)"
+          fill="hsl(328 100% 54%)"
           fontSize="48"
         >
           <animate attributeName="font-size" values="48;60;48" dur="0.8s" repeatCount="indefinite" keyTimes="0;0.3;1" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1" />
