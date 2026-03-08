@@ -66,7 +66,7 @@ const HeartTextFlow = () => {
   );
 
   const laneTokenIndexes = useMemo(
-    () => TOKEN_COUNTS.map((count) => Array.from({ length: count }, (_, i) => i)),
+    () => CHAR_COUNTS.map((count) => Array.from({ length: count }, (_, i) => i)),
     []
   );
 
