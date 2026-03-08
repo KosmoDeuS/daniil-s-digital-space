@@ -5,12 +5,11 @@
 
 import { useEffect, useMemo, useRef } from "react";
 
-const TOKEN_TEXT = " I love you ♥ ";
+const TOKEN_TEXT = " I love you ";
 
 /**
  * Generate a closed heart-shaped SVG path.
- * Parametric heart curve: x=16sin³(t), y=13cos(t)-5cos(2t)-2cos(3t)-cos(4t)
- * Start angle is shifted by PI so seam sits at the bottom tip, not top-center.
+ * Seam at bottom tip (shifted by PI).
  */
 function heartPath(scale: number, cx: number, cy: number): string {
   const points: string[] = [];
@@ -34,11 +33,25 @@ function heartPath(scale: number, cx: number, cy: number): string {
 }
 
 const CX = 500;
-const CY = 460;
-const LANE_SCALES = [1.0, 0.88, 0.76, 0.64, 0.52, 0.4, 0.28];
-const FONT_SIZES = [13, 12, 11, 10, 9, 8, 7];
-const TOKEN_COUNTS = [28, 25, 22, 19, 16, 13, 10];
+const CY = 440;
+/* Bigger heart — scale multiplier increased from 18 to 24 */
+const BASE_SCALE = 24;
+const LANE_SCALES = [1.0, 0.87, 0.74, 0.61, 0.48, 0.36, 0.25];
+const FONT_SIZES = [15, 14, 13, 11, 10, 9, 7];
+const TOKEN_COUNTS = [30, 27, 24, 20, 17, 14, 10];
 const SPEED_PX_PER_SEC = 62;
+
+/* Colour gradient from outer (deep magenta) to inner (bright hot pink / white-ish) for depth */
+const LANE_COLORS = [
+  "hsl(330 100% 45%)",
+  "hsl(332 100% 52%)",
+  "hsl(334 100% 59%)",
+  "hsl(336 100% 66%)",
+  "hsl(338 100% 73%)",
+  "hsl(340 100% 80%)",
+  "hsl(342 100% 87%)",
+];
+const LANE_OPACITIES = [0.7, 0.75, 0.8, 0.85, 0.9, 0.93, 0.97];
 
 const HeartTextFlow = () => {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -47,7 +60,7 @@ const HeartTextFlow = () => {
   const lastTimeRef = useRef<number | null>(null);
 
   const paths = useMemo(
-    () => LANE_SCALES.map((s) => heartPath(s * 18, CX, CY)),
+    () => LANE_SCALES.map((s) => heartPath(s * BASE_SCALE, CX, CY)),
     []
   );
 
@@ -132,10 +145,10 @@ const HeartTextFlow = () => {
           {laneTokenIndexes[lane].map((token) => (
             <text
               key={token}
-              fill={`hsl(330 100% ${70 + lane * 2}%)`}
+              fill={LANE_COLORS[lane]}
               fontSize={FONT_SIZES[lane]}
               fontFamily="'Inter', sans-serif"
-              opacity={0.95 - lane * 0.08}
+              opacity={LANE_OPACITIES[lane]}
             >
               <textPath
                 data-lane={lane}
@@ -157,7 +170,7 @@ const HeartTextFlow = () => {
           textAnchor="middle"
           dominantBaseline="middle"
           fill="hsl(330 100% 76%)"
-          fontSize="42"
+          fontSize="46"
           fontFamily="'Inter', sans-serif"
           fontWeight="700"
           letterSpacing="4"
@@ -165,12 +178,12 @@ const HeartTextFlow = () => {
           Lili
         </text>
         <text
-          x={CX + 55}
+          x={CX + 58}
           y={CY + 12}
           textAnchor="middle"
           dominantBaseline="middle"
           fill="hsl(330 100% 71%)"
-          fontSize="22"
+          fontSize="24"
           className="animate-pulse"
         >
           ♥
@@ -181,4 +194,3 @@ const HeartTextFlow = () => {
 };
 
 export default HeartTextFlow;
-
