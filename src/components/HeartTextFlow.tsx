@@ -83,8 +83,8 @@ const HeartTextFlow = () => {
 
     const textPaths = svg.querySelectorAll<SVGTextPathElement>("textPath[data-lane][data-token]");
 
-    /* Pixel zone near the seam (offset ~0) where characters fade in one by one */
-    const REVEAL_ZONE_PX = 150;
+    /* Pixel zones near the seam (offset ~0 and ~length) for fade in/out */
+    const FADE_ZONE_PX = 150;
     const fullText = TOKEN_TEXT;
     const charCount = fullText.length;
 
@@ -107,24 +107,35 @@ const HeartTextFlow = () => {
 
         const parentText = tp.parentElement;
         if (!parentText) return;
-        const baseFill = parentText.getAttribute("fill") || "hsl(330 100% 70%)";
         const baseOpacity = Number(parentText.getAttribute("opacity") || 1);
 
-        if (offset < REVEAL_ZONE_PX) {
-          /* Fractional reveal progress — how many chars are fully/partially visible */
-          const revealProgress = (offset / REVEAL_ZONE_PX) * charCount;
+        const distToEnd = metric.length - offset;
+        const inFadeIn = offset < FADE_ZONE_PX;
+        const inFadeOut = distToEnd < FADE_ZONE_PX;
 
-          /* Build per-character tspans with individual opacity */
+        if (inFadeIn || inFadeOut) {
           let html = "";
           for (let i = 0; i < charCount; i++) {
-            const charProgress = Math.max(0, Math.min(1, revealProgress - i));
-            const charOpacity = (charProgress * baseOpacity).toFixed(2);
+            let charOp = baseOpacity;
+
+            if (inFadeIn) {
+              /* Fade-in: characters reveal progressively from the seam start */
+              const revealProgress = (offset / FADE_ZONE_PX) * charCount;
+              charOp = Math.max(0, Math.min(1, revealProgress - i)) * baseOpacity;
+            }
+
+            if (inFadeOut) {
+              /* Fade-out: characters disappear from the end, approaching the seam */
+              const fadeProgress = (distToEnd / FADE_ZONE_PX) * charCount;
+              const fadeOp = Math.max(0, Math.min(1, fadeProgress - (charCount - 1 - i))) * baseOpacity;
+              charOp = inFadeIn ? Math.min(charOp, fadeOp) : fadeOp;
+            }
+
             const ch = fullText[i] === " " ? "&#160;" : fullText[i];
-            html += `<tspan opacity="${charOpacity}">${ch}</tspan>`;
+            html += `<tspan opacity="${charOp.toFixed(2)}">${ch}</tspan>`;
           }
           tp.innerHTML = html;
         } else {
-          /* Fully visible — just plain text, no tspans overhead */
           if (tp.childElementCount > 0 || tp.textContent !== fullText) {
             tp.textContent = fullText;
           }
