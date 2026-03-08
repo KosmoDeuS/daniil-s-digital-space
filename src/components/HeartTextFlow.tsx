@@ -3,17 +3,17 @@
  * RU: Анимированная композиция-сердце — текст "I love you" движется по SVG-путям в форме сердца.
  */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
 
-const PHRASE = "I love you  ♥  ";
+const PHRASE = " I love you ♥ ";
 
 /**
  * Generate a heart-shaped SVG path string at a given scale.
- * Uses parametric heart curve: x = 16sin³(t), y = 13cos(t) - 5cos(2t) - 2cos(3t) - cos(4t)
+ * Parametric heart curve: x=16sin³(t), y=13cos(t)-5cos(2t)-2cos(3t)-cos(4t)
  */
 function heartPath(scale: number, cx: number, cy: number): string {
   const points: string[] = [];
-  const steps = 200;
+  const steps = 300;
   for (let i = 0; i <= steps; i++) {
     const t = (i / steps) * Math.PI * 2;
     const x = cx + scale * 16 * Math.pow(Math.sin(t), 3);
@@ -29,103 +29,87 @@ function heartPath(scale: number, cx: number, cy: number): string {
   return points.join(" ") + " Z";
 }
 
-const LANE_SCALES = [0.95, 0.78, 0.61, 0.44, 0.28];
-const CX = 300;
-const CY = 280;
+const CX = 500;
+const CY = 460;
+const LANE_SCALES = [1.0, 0.88, 0.76, 0.64, 0.52, 0.40, 0.28];
+const FONT_SIZES = [13, 12, 11, 10, 9, 8, 7];
 
 const HeartTextFlow = () => {
-  const progressRef = useRef(0);
+  const svgRef = useRef<SVGSVGElement>(null);
   const rafRef = useRef<number>(0);
-  const textRefsArr = useRef<(SVGTextPathElement | null)[][]>(
-    LANE_SCALES.map(() => [])
+  const progressRef = useRef(0);
+
+  const paths = useMemo(
+    () => LANE_SCALES.map((s) => heartPath(s * 18, CX, CY)),
+    []
   );
 
-  // Pre-generate paths
-  const paths = LANE_SCALES.map((s) => heartPath(s, CX, CY));
-
   useEffect(() => {
-    const speed = 0.03; // percent per frame
+    const svg = svgRef.current;
+    if (!svg) return;
+
+    const textPaths = svg.querySelectorAll<SVGTextPathElement>("[data-lane]");
+
     const animate = () => {
-      progressRef.current = (progressRef.current + speed) % 100;
-      // Update all textPath startOffsets synchronously
-      for (let lane = 0; lane < LANE_SCALES.length; lane++) {
-        const refs = textRefsArr.current[lane];
-        if (refs) {
-          refs.forEach((ref, idx) => {
-            if (ref) {
-              const offset = (progressRef.current + idx * 50) % 100;
-              ref.setAttribute("startOffset", `${offset}%`);
-            }
-          });
-        }
-      }
+      progressRef.current = (progressRef.current + 0.04) % 100;
+      textPaths.forEach((tp) => {
+        const copy = Number(tp.dataset.copy || 0);
+        const offset = (progressRef.current + copy * 50) % 100;
+        tp.setAttribute("startOffset", `${offset}%`);
+      });
       rafRef.current = requestAnimationFrame(animate);
     };
+
     rafRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(rafRef.current);
   }, []);
 
   return (
     <svg
-      viewBox="0 0 600 560"
-      className="w-full h-full max-w-[600px] max-h-[90vh]"
+      ref={svgRef}
+      viewBox="0 0 1000 900"
+      className="w-full h-full"
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
-        {/* Glow filter */}
-        <filter id="pinkGlow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+        <filter id="textGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="b" />
           <feMerge>
-            <feMergeNode in="blur" />
+            <feMergeNode in="b" />
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
-        <filter id="strongGlow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+        <filter id="accentGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b" />
           <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="blur" />
+            <feMergeNode in="b" />
+            <feMergeNode in="b" />
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
-
-        {/* Heart paths for each lane */}
         {paths.map((d, i) => (
-          <path key={i} id={`heartLane${i}`} d={d} fill="none" />
+          <path key={i} id={`hl${i}`} d={d} fill="none" />
         ))}
       </defs>
 
-      {/* Ambient glow behind heart */}
-      <ellipse
-        cx={CX}
-        cy={CY}
-        rx="200"
-        ry="180"
-        fill="rgba(255,105,180,0.04)"
-      />
-
       {/* Text lanes */}
-      {LANE_SCALES.map((_, laneIdx) => (
-        <g key={laneIdx} filter="url(#pinkGlow)">
-          {[0, 1].map((copyIdx) => (
+      {LANE_SCALES.map((_, i) => (
+        <g key={i} filter="url(#textGlow)">
+          {[0, 1].map((c) => (
             <text
-              key={copyIdx}
-              fill="#ff69b4"
-              fontSize={laneIdx < 2 ? "11" : laneIdx < 4 ? "9" : "7"}
+              key={c}
+              fill={`hsl(330, 100%, ${70 + i * 2}%)`}
+              fontSize={FONT_SIZES[i]}
               fontFamily="'Inter', sans-serif"
-              opacity={1 - laneIdx * 0.12}
+              opacity={0.95 - i * 0.08}
             >
               <textPath
-                ref={(el) => {
-                  if (!textRefsArr.current[laneIdx]) {
-                    textRefsArr.current[laneIdx] = [];
-                  }
-                  textRefsArr.current[laneIdx][copyIdx] = el;
-                }}
-                href={`#heartLane${laneIdx}`}
+                data-lane={i}
+                data-copy={c}
+                href={`#hl${i}`}
                 startOffset="0%"
               >
-                {PHRASE.repeat(8)}
+                {PHRASE.repeat(12)}
               </textPath>
             </text>
           ))}
@@ -133,28 +117,27 @@ const HeartTextFlow = () => {
       ))}
 
       {/* Center "Lili" accent */}
-      <g filter="url(#strongGlow)">
+      <g filter="url(#accentGlow)">
         <text
           x={CX}
-          y={CY + 10}
+          y={CY + 15}
           textAnchor="middle"
           dominantBaseline="middle"
           fill="#ff85c8"
-          fontSize="38"
+          fontSize="42"
           fontFamily="'Inter', sans-serif"
           fontWeight="700"
-          letterSpacing="3"
+          letterSpacing="4"
         >
           Lili
         </text>
-        {/* Pulsing heart next to Lili */}
         <text
-          x={CX + 52}
-          y={CY + 8}
+          x={CX + 55}
+          y={CY + 12}
           textAnchor="middle"
           dominantBaseline="middle"
           fill="#ff69b4"
-          fontSize="20"
+          fontSize="22"
           className="animate-pulse"
         >
           ♥
