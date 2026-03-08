@@ -39,6 +39,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           {/* EN: Task Manager page / RU: Страница менеджера задач */}
           <Route path="/tasks" element={<TaskManagerPage />} />
+          <Route path="/lili" element={<LiliPage />} />
           {/* EN: Catch-all 404 route — must be last / RU: Маршрут-ловушка 404 — должен быть последним */}
           <Route path="*" element={<NotFound />} />
         </Routes>

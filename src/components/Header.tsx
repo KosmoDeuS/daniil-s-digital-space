@@ -28,6 +28,7 @@ const navItems = [
   { label: "Projects", href: "#projects", isRoute: false },
   { label: "Contact", href: "#contact", isRoute: false },
   { label: "Tasks", href: "/tasks", isRoute: true },
+  { label: "Lili ♥", href: "/lili", isRoute: true },
 ];
 
 const Header = () => {
