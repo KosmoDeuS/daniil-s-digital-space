@@ -1,21 +1,23 @@
 /**
- * EN: Animated heart composition — text "I love you" flows along heart-shaped SVG paths.
- * RU: Анимированная композиция-сердце — текст "I love you" движется по SVG-путям в форме сердца.
+ * EN: Animated heart composition — repeated text tokens circulate on closed heart lanes.
+ * RU: Анимированная композиция-сердце — повторяющиеся текстовые токены циркулируют по замкнутым дорожкам сердца.
  */
 
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
-const PHRASE = " I love you ♥ ";
+const TOKEN_TEXT = " I love you ♥ ";
 
 /**
- * Generate a heart-shaped SVG path string at a given scale.
+ * Generate a closed heart-shaped SVG path.
  * Parametric heart curve: x=16sin³(t), y=13cos(t)-5cos(2t)-2cos(3t)-cos(4t)
+ * Start angle is shifted by PI so seam sits at the bottom tip, not top-center.
  */
 function heartPath(scale: number, cx: number, cy: number): string {
   const points: string[] = [];
   const steps = 300;
+
   for (let i = 0; i <= steps; i++) {
-    const t = (i / steps) * Math.PI * 2;
+    const t = (i / steps) * Math.PI * 2 + Math.PI;
     const x = cx + scale * 16 * Math.pow(Math.sin(t), 3);
     const y =
       cy -
@@ -24,23 +26,33 @@ function heartPath(scale: number, cx: number, cy: number): string {
           5 * Math.cos(2 * t) -
           2 * Math.cos(3 * t) -
           Math.cos(4 * t));
+
     points.push(`${i === 0 ? "M" : "L"}${x.toFixed(2)},${y.toFixed(2)}`);
   }
-  return points.join(" ") + " Z";
+
+  return `${points.join(" ")} Z`;
 }
 
 const CX = 500;
 const CY = 460;
-const LANE_SCALES = [1.0, 0.88, 0.76, 0.64, 0.52, 0.40, 0.28];
+const LANE_SCALES = [1.0, 0.88, 0.76, 0.64, 0.52, 0.4, 0.28];
 const FONT_SIZES = [13, 12, 11, 10, 9, 8, 7];
+const TOKEN_COUNTS = [28, 25, 22, 19, 16, 13, 10];
+const SPEED_PX_PER_SEC = 62;
 
 const HeartTextFlow = () => {
   const svgRef = useRef<SVGSVGElement>(null);
   const rafRef = useRef<number>(0);
   const progressRef = useRef(0);
+  const lastTimeRef = useRef<number | null>(null);
 
   const paths = useMemo(
     () => LANE_SCALES.map((s) => heartPath(s * 18, CX, CY)),
+    []
+  );
+
+  const laneTokenIndexes = useMemo(
+    () => TOKEN_COUNTS.map((count) => Array.from({ length: count }, (_, i) => i)),
     []
   );
 
@@ -48,31 +60,42 @@ const HeartTextFlow = () => {
     const svg = svgRef.current;
     if (!svg) return;
 
-    // Get actual path lengths for pixel-based offsets
     const pathEls = svg.querySelectorAll<SVGPathElement>("defs path[id^='hl']");
-    const pathLengths: number[] = [];
-    pathEls.forEach((p) => pathLengths.push(p.getTotalLength()));
+    const laneMetrics = Array.from(pathEls).map((pathEl, lane) => {
+      const length = pathEl.getTotalLength();
+      const count = TOKEN_COUNTS[lane] ?? 12;
+      const spacing = length / count;
+      return { length, spacing };
+    });
 
-    const textPaths = svg.querySelectorAll<SVGTextPathElement>("[data-lane]");
-    const SPEED = 0.8; // pixels per frame
+    const textPaths = svg.querySelectorAll<SVGTextPathElement>("textPath[data-lane][data-token]");
 
-    const animate = () => {
-      progressRef.current += SPEED;
+    const animate = (time: number) => {
+      if (lastTimeRef.current === null) lastTimeRef.current = time;
+      const deltaSec = (time - lastTimeRef.current) / 1000;
+      lastTimeRef.current = time;
+
+      progressRef.current += SPEED_PX_PER_SEC * deltaSec;
+
       textPaths.forEach((tp) => {
         const lane = Number(tp.dataset.lane || 0);
-        const copy = Number(tp.dataset.copy || 0);
-        const len = pathLengths[lane] || 1;
-        // Wrap progress within path length
-        const base = progressRef.current % len;
-        // Offset each copy by a third of the path length
-        const offset = (base + copy * (len / 3)) % len;
+        const token = Number(tp.dataset.token || 0);
+        const metric = laneMetrics[lane];
+        if (!metric) return;
+
+        const offset = (progressRef.current + token * metric.spacing) % metric.length;
         tp.setAttribute("startOffset", `${offset}px`);
       });
+
       rafRef.current = requestAnimationFrame(animate);
     };
 
     rafRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafRef.current);
+
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      lastTimeRef.current = null;
+    };
   }, []);
 
   return (
@@ -98,43 +121,42 @@ const HeartTextFlow = () => {
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
+
         {paths.map((d, i) => (
           <path key={i} id={`hl${i}`} d={d} fill="none" />
         ))}
       </defs>
 
-      {/* Text lanes */}
-      {LANE_SCALES.map((_, i) => (
-        <g key={i} filter="url(#textGlow)">
-          {[0, 1, 2].map((c) => (
+      {LANE_SCALES.map((_, lane) => (
+        <g key={lane} filter="url(#textGlow)">
+          {laneTokenIndexes[lane].map((token) => (
             <text
-              key={c}
-              fill={`hsl(330, 100%, ${70 + i * 2}%)`}
-              fontSize={FONT_SIZES[i]}
+              key={token}
+              fill={`hsl(330 100% ${70 + lane * 2}%)`}
+              fontSize={FONT_SIZES[lane]}
               fontFamily="'Inter', sans-serif"
-              opacity={0.95 - i * 0.08}
+              opacity={0.95 - lane * 0.08}
             >
               <textPath
-                data-lane={i}
-                data-copy={c}
-                href={`#hl${i}`}
+                data-lane={lane}
+                data-token={token}
+                href={`#hl${lane}`}
                 startOffset="0px"
               >
-                {PHRASE.repeat(20)}
+                {TOKEN_TEXT}
               </textPath>
             </text>
           ))}
         </g>
       ))}
 
-      {/* Center "Lili" accent */}
       <g filter="url(#accentGlow)">
         <text
           x={CX}
           y={CY + 15}
           textAnchor="middle"
           dominantBaseline="middle"
-          fill="#ff85c8"
+          fill="hsl(330 100% 76%)"
           fontSize="42"
           fontFamily="'Inter', sans-serif"
           fontWeight="700"
@@ -147,7 +169,7 @@ const HeartTextFlow = () => {
           y={CY + 12}
           textAnchor="middle"
           dominantBaseline="middle"
-          fill="#ff69b4"
+          fill="hsl(330 100% 71%)"
           fontSize="22"
           className="animate-pulse"
         >
@@ -159,3 +181,4 @@ const HeartTextFlow = () => {
 };
 
 export default HeartTextFlow;
+
