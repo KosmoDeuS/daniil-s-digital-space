@@ -54,7 +54,7 @@ const PinkParticles = () => {
     };
     window.addEventListener("resize", handleResize);
 
-    const BASE_SIZE = 4;
+    const BASE_SIZE = 8;
     const BASE_VY = -0.35;
     const BASE_ALPHA = 0.45;
 
