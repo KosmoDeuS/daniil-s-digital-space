@@ -83,6 +83,11 @@ const HeartTextFlow = () => {
 
     const textPaths = svg.querySelectorAll<SVGTextPathElement>("textPath[data-lane][data-token]");
 
+    /* Pixel zone near the seam (offset ~0) where characters reveal one by one */
+    const REVEAL_ZONE_PX = 120;
+    const fullText = TOKEN_TEXT;
+    const charCount = fullText.length;
+
     const animate = (time: number) => {
       if (lastTimeRef.current === null) lastTimeRef.current = time;
       const deltaSec = (time - lastTimeRef.current) / 1000;
@@ -96,8 +101,21 @@ const HeartTextFlow = () => {
         const metric = laneMetrics[lane];
         if (!metric) return;
 
-        const offset = (progressRef.current + token * metric.spacing) % metric.length;
+        const rawOffset = progressRef.current + token * metric.spacing;
+        const offset = ((rawOffset % metric.length) + metric.length) % metric.length;
         tp.setAttribute("startOffset", `${offset}px`);
+
+        /* Character-by-character reveal: when offset is small (just past seam),
+           show fewer characters. As offset grows past REVEAL_ZONE, show full text. */
+        if (offset < REVEAL_ZONE_PX) {
+          const revealRatio = offset / REVEAL_ZONE_PX;
+          const charsToShow = Math.max(0, Math.floor(revealRatio * charCount));
+          tp.textContent = fullText.slice(0, charsToShow);
+        } else {
+          if (tp.textContent !== fullText) {
+            tp.textContent = fullText;
+          }
+        }
       });
 
       rafRef.current = requestAnimationFrame(animate);
