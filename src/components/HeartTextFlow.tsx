@@ -148,6 +148,9 @@ const HeartTextFlow = () => {
             <text
               key={token}
               fill={LANE_COLORS[lane]}
+              stroke="black"
+              strokeWidth="1"
+              paintOrder="stroke"
               fontSize={FONT_SIZES[lane]}
               fontFamily="'Inter', sans-serif"
               opacity={LANE_OPACITIES[lane]}
