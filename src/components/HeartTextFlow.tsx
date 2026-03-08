@@ -117,7 +117,8 @@ const HeartTextFlow = () => {
           /* Build per-character tspans with individual opacity */
           let html = "";
           for (let i = 0; i < charCount; i++) {
-            const charProgress = Math.max(0, Math.min(1, revealProgress - i));
+            const reverseI = charCount - 1 - i;
+            const charProgress = Math.max(0, Math.min(1, revealProgress - reverseI));
             const charOpacity = (charProgress * baseOpacity).toFixed(2);
             const ch = fullText[i] === " " ? "&#160;" : fullText[i];
             html += `<tspan opacity="${charOpacity}">${ch}</tspan>`;
