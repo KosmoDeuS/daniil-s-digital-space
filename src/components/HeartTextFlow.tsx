@@ -77,7 +77,7 @@ const HeartTextFlow = () => {
     const pathEls = svg.querySelectorAll<SVGPathElement>("defs path[id^='hl']");
     const laneMetrics = Array.from(pathEls).map((pathEl, lane) => {
       const length = pathEl.getTotalLength();
-      const count = TOKEN_COUNTS[lane] ?? 12;
+      const count = CHAR_COUNTS[lane] ?? 40;
       const spacing = length / count;
       return { length, spacing };
     });
