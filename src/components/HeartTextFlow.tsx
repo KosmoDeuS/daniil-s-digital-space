@@ -191,7 +191,6 @@ const HeartTextFlow = () => {
           <animate attributeName="opacity" values="0.85;1;0.85" dur="0.8s" repeatCount="indefinite" />
           ♥
         </text>
-        </text>
       </g>
     </svg>
   );
