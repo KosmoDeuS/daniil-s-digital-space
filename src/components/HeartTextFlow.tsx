@@ -172,7 +172,7 @@ const HeartTextFlow = () => {
           textAnchor="middle"
           dominantBaseline="middle"
           fill="hsl(340 70% 45%)"
-          fontSize="46"
+          fontSize="72"
           fontFamily="'Inter', sans-serif"
           fontWeight="700"
           letterSpacing="4"
