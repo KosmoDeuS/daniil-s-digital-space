@@ -1,4 +1,4 @@
-/**
+/** 
  * EN: Root application component. Sets up routing, global providers (React Query, Tooltips),
  *     and toast notification systems. All pages are registered here as routes.
  * RU: Корневой компонент приложения. Настраивает маршрутизацию, глобальные провайдеры
