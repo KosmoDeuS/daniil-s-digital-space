@@ -8,8 +8,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
 const LiliPage = () => (
-  <div className="min-h-screen bg-black flex flex-col items-center justify-center relative overflow-hidden animate-fade-in">
-    {/* Back link */}
+  <div className="min-h-screen bg-black flex flex-col items-center justify-center relative overflow-hidden">
     <Link
       to="/"
       className="absolute top-5 left-5 text-pink-400/60 hover:text-pink-300 transition-colors z-10 flex items-center gap-1 text-sm"
@@ -18,8 +17,7 @@ const LiliPage = () => (
       Back
     </Link>
 
-    {/* Heart composition */}
-    <div className="w-[90vmin] h-[90vmin] max-w-[600px] max-h-[600px] flex items-center justify-center">
+    <div className="w-[95vmin] h-[95vmin] max-w-[800px] max-h-[800px] flex items-center justify-center">
       <HeartTextFlow />
     </div>
   </div>
