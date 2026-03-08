@@ -37,7 +37,7 @@ const CX = 500;
 const CY = 440;
 /* Bigger heart — scale multiplier increased from 18 to 24 */
 const BASE_SCALE = 24;
-const LANE_SCALES = [1.0, 0.87, 0.74, 0.61, 0.48, 0.36, 0.25];
+const LANE_SCALES = [1.0, 0.87, 0.74, 0.61, 0.48, 0.40];
 const FONT_SIZES = [22, 20, 18, 16, 14, 12, 10];
 const CHAR_COUNTS = [120, 108, 96, 80, 68, 56, 40];
 const SPEED_PX_PER_SEC = 62;
