@@ -50,9 +50,8 @@ const LANE_COLORS = [
   "hsl(336 100% 66%)",
   "hsl(338 100% 73%)",
   "hsl(340 100% 80%)",
-  "hsl(342 100% 87%)",
 ];
-const LANE_OPACITIES = [0.7, 0.75, 0.8, 0.85, 0.9, 0.93, 0.97];
+const LANE_OPACITIES = [0.7, 0.75, 0.8, 0.85, 0.9, 0.93];
 
 const HeartTextFlow = () => {
   const svgRef = useRef<SVGSVGElement>(null);
