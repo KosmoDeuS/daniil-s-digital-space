@@ -158,7 +158,7 @@ const HeartTextFlow = () => {
                 href={`#hl${lane}`}
                 startOffset="0px"
               >
-                {TOKEN_TEXT}
+                {CHAR_SEQUENCE[token % CHAR_SEQUENCE.length]}
               </textPath>
             </text>
           ))}
