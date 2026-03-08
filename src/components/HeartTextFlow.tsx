@@ -106,7 +106,7 @@ const HeartTextFlow = () => {
       {/* Text lanes */}
       {LANE_SCALES.map((_, i) => (
         <g key={i} filter="url(#textGlow)">
-          {[0, 1].map((c) => (
+          {[0, 1, 2].map((c) => (
             <text
               key={c}
               fill={`hsl(330, 100%, ${70 + i * 2}%)`}
@@ -118,9 +118,9 @@ const HeartTextFlow = () => {
                 data-lane={i}
                 data-copy={c}
                 href={`#hl${i}`}
-                startOffset="0%"
+                startOffset="0px"
               >
-                {PHRASE.repeat(12)}
+                {PHRASE.repeat(20)}
               </textPath>
             </text>
           ))}
