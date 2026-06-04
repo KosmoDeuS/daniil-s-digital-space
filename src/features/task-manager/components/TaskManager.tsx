@@ -21,7 +21,7 @@
  *   - src/lib/utils.ts — cn() для условных CSS-классов
  */
 
-import { useState, useEffect, useMemo, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { Check, Trash2, Plus } from "lucide-react";
 import { Task, TaskFilter } from "../types/task";
 import { TaskService } from "../services/taskService";
@@ -115,17 +115,15 @@ const TaskManager = () => {
   };
 
   /**
-   * EN: Memoized task counts for filter badges (recalculated when tasks change).
-   * RU: Мемоизированные счётчики задач для значков фильтров (пересчитываются при изменении задач).
+   * EN: Task counts for filter badges.
+   * RU: Счётчики задач для значков фильтров.
    */
-  const taskCount = useMemo(() => {
-    const all = service.getAllTasks();
-    return {
-      all: all.length,
-      active: all.filter((t) => !t.completed).length,
-      completed: all.filter((t) => t.completed).length,
-    };
-  }, [tasks]);
+  const allTasks = service.getAllTasks();
+  const taskCount = {
+    all: allTasks.length,
+    active: allTasks.filter((t) => !t.completed).length,
+    completed: allTasks.filter((t) => t.completed).length,
+  };
 
   return (
     <div className="min-h-screen marble-bg text-foreground pt-24 pb-16 px-4">
